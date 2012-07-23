@@ -8,15 +8,13 @@
 #ifndef BATCH_DESCRIPTOR_H_
 #define BATCH_DESCRIPTOR_H_
 
-#include "sequencer.h"
-
 namespace disruptor {
 
 class BatchDescriptor {
 
 public:
 
-	BatchDescriptor(int size) : size_(size), end_(Sequencer::INITIAL_CURSOR_VALUE) {
+	BatchDescriptor(int size) : size_(size), end_(-1) {
 
 	}
 

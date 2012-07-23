@@ -8,12 +8,9 @@
 #ifndef SEQUENCER_H_
 #define SEQUENCER_H_
 
-#include <vector>
-#include <exception>
-#include "sequence.h"
+#include "interface.h"
 #include "sequence_barrier.h"
-#include "claim_strategy.h"
-#include "wait_strategy.h"
+#include "batch_descriptor.h"
 
 namespace disruptor {
 
@@ -21,8 +18,8 @@ class Sequencer {
 
 public:
 
-	Sequencer(const ClaimStrategy& claim_strategy, const WaitStrategy& wait_strategy)
-	: claim_strategy_(&claim_strategy), wait_strategy_(&wait_strategy) {
+	Sequencer(ClaimStrategy* claim_strategy, WaitStrategy* wait_strategy)
+	: claim_strategy_(claim_strategy), wait_strategy_(wait_strategy) {
 		cursor_ = new Sequence(INITIAL_CURSOR_VALUE);
 	}
 
@@ -31,7 +28,7 @@ public:
 	}
 
 	SequenceBarrier* newBarrier(const std::vector<Sequence*>& sequences_to_track) {
-		return new ProcessingSequenceBarrier(*wait_strategy_, *cursor_, sequences_to_track);
+		return new ProcessingSequenceBarrier(wait_strategy_, cursor_, sequences_to_track);
 	}
 
 	BatchDescriptor* newBatchDescriptor(int size) {
@@ -108,7 +105,7 @@ public:
 
 	static const long INITIAL_CURSOR_VALUE = -1L;
 
-private:
+protected:
 
 	void publish(long sequence, int batch_size) {
 		cursor_->set(sequence);

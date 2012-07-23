@@ -8,29 +8,22 @@
 #ifndef RING_BUFFER_H_
 #define RING_BUFFER_H_
 
-//#include "sequencer.h"
-
+#include "interface.h"
 #include <vector>
+#include "sequencer.h"
 
 namespace disruptor {
 
 template<typename T>
-class RingBuffer {
+class RingBuffer : public Sequencer {
 
 public:
 
-	RingBuffer<T>(int size) : buffer_size_(size), index_mask_(size - 1) {
-		fill(size);
-	}
-
-	/*
-	RingBuffer<T>(EventFactory<T> event_factory, ClaimStrategy* claim_strategy, WaitStrategy* wait_strategy)
-	: claim_strategy_(claim_strategy), wait_strategy_(wait_strategy) {
+	RingBuffer<T>(ClaimStrategy* claim_strategy, WaitStrategy* wait_strategy)
+	: Sequencer(claim_strategy, wait_strategy) {
 		index_mask_ = claim_strategy_->bufferSize() - 1;
-		entries = new T[claim_strategy_->bufferSize()];
-		fill(event_factory, claim_strategy_->bufferSize());
+		fill(claim_strategy_->bufferSize());
 	}
-	*/
 
 	T* get(long sequence) {
 		return entries[(int) sequence & index_mask_];
@@ -48,14 +41,6 @@ private:
 	int buffer_size_;
 
 	int index_mask_;
-
-	/*
-
-	ClaimStrategy* claim_strategy_;
-
-	WaitStrategy* wait_strategy_;
-
-	*/
 
 	std::vector<T*> entries;
 };

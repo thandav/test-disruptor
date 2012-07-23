@@ -8,25 +8,11 @@
 #ifndef WAIT_STRATEGY_H_
 #define WAIT_STRATEGY_H_
 
-#include <vector>
-#include "sequence.h"
-#include "sequence_barrier.h"
+
+#include "interface.h"
 
 namespace disruptor {
 
-class WaitStrategy {
-
-public:
-
-	virtual ~WaitStrategy();
-
-	virtual long waitFor(long sequence, Sequence& cursor, const std::vector<Sequence*>& dependents,
-			SequenceBarrier* barrier) = 0;
-
-	//TODO add waitFor with timeout
-
-	virtual void signalAllWhenBlocking() = 0;
-};
 
 class BusySpinWaitStrategy : public WaitStrategy {
 

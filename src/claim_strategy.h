@@ -8,44 +8,17 @@
 #ifndef CLAIM_STRATEGY_H_
 #define CLAIM_STRATEGY_H_
 
-#include <vector>
-#include "sequence.h"
-#include "sequencer.h"
-#include "sequence_barrier.h"
+#include "interface.h"
 
 namespace disruptor {
 
-class ClaimStrategy {
-
-public:
-
-	virtual ~ClaimStrategy();
-
-	virtual int bufferSize() = 0;
-
-	virtual long sequence() = 0;
-
-	virtual bool hasAvailableCapacity(int avbl_capacity, const std::vector<Sequence*>& dependent_sequences) = 0;
-
-	virtual long incrementAndGet(const std::vector<Sequence*>& dependent_sequences) = 0;
-
-	virtual long incrementAndGet(int delta, const std::vector<Sequence*>& dependent_sequences) = 0;
-
-	virtual void setSequence(long, const std::vector<Sequence*>&) = 0;
-
-	virtual void serializePublishing(long, Sequence&, int) = 0;
-
-	virtual long checkAndIncrement(int, int, const std::vector<Sequence*>&) = 0;
-
-};
 
 class SingleThreadedClaimStrategy : public ClaimStrategy {
 
 public:
 
 	SingleThreadedClaimStrategy(int buffer_size)
-	: buffer_size_(buffer_size), min_gating_sequence_(Sequencer::INITIAL_CURSOR_VALUE),
-	  claim_sequence_(Sequencer::INITIAL_CURSOR_VALUE) {
+	: buffer_size_(buffer_size), min_gating_sequence_(-1), claim_sequence_(-1) {
 
 	}
 

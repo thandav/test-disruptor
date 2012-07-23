@@ -8,41 +8,17 @@
 #ifndef SEQUENCE_BARRIER_H_
 #define SEQUENCE_BARRIER_H_
 
-#include <vector>
-#include "sequence.h"
-#include "wait_strategy.h"
+#include "interface.h"
 
 namespace disruptor {
 
-class SequenceBarrier {
-
-public:
-
-	virtual ~SequenceBarrier();
-
-	virtual long waitFor(long sequence) = 0;
-
-	virtual long cursor() = 0;
-
-	virtual bool isAlerted() = 0;
-
-	virtual void alert() = 0;
-
-	virtual void clearAlert() = 0;
-
-	virtual void checkAlert() = 0;
-
-};
 
 class ProcessingSequenceBarrier : public SequenceBarrier {
 
 public:
 
-	ProcessingSequenceBarrier(const WaitStrategy& wait_strategy,
-			const Sequence& cursor_sequence,
-			const std::vector<Sequence*>& dependent_sequences)
-	: wait_strategy_(&wait_strategy), cursor_sequence_(cursor_sequence),
-	  dependent_sequences_(dependent_sequences), alerted_(false) {
+	ProcessingSequenceBarrier(WaitStrategy* wait_strategy, Sequence* cursor_sequence, const std::vector<Sequence*>& dependent_sequences)
+	: cursor_sequence_(cursor_sequence), dependent_sequences_(dependent_sequences), alerted_(false) {
 
 	}
 
