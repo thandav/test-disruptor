@@ -79,7 +79,8 @@ private:
 		if (wrap_point > min_gating_sequence_) {
 			long min_sequence;
 			while (wrap_point > (min_sequence = getMinimumSequence(dependent_sequences))) {
-				//i think you should yield here???
+				std::cout << "min sequence: " << min_sequence << " wait a sec!" << std::endl;
+				sleep(1);
 			}
 			min_gating_sequence_ = min_sequence;
 		}

@@ -18,10 +18,8 @@ class BusySpinWaitStrategy : public WaitStrategy {
 
 public:
 
-	long waitFor(long sequence, Sequence& cursor, const std::vector<Sequence*>& dependents,
-			SequenceBarrier* barrier) {
+	long waitFor(long sequence, const Sequence& cursor, const std::vector<Sequence*>& dependents, SequenceBarrier* barrier) {
 		long avbl_sequence;
-
 		if (0 == dependents.size()) {
 			while ((avbl_sequence = cursor.get()) < sequence) {
 				barrier->checkAlert();
@@ -31,6 +29,7 @@ public:
 				barrier->checkAlert();
 			}
 		}
+		std::cout << "avbl_sequence: " << avbl_sequence << std::endl;
 		return avbl_sequence;
 	}
 

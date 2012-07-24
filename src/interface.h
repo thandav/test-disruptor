@@ -12,6 +12,7 @@
 #include <vector>
 #include <climits>
 #include <exception>
+#include <unistd.h>
 
 namespace disruptor {
 
@@ -67,7 +68,7 @@ public:
 
 	virtual ~WaitStrategy() {}
 
-	virtual long waitFor(long sequence, Sequence& cursor, const std::vector<Sequence*>& dependents,
+	virtual long waitFor(long sequence, const Sequence& cursor, const std::vector<Sequence*>& dependents,
 			SequenceBarrier* barrier) = 0;
 
 	//TODO add waitFor with timeout

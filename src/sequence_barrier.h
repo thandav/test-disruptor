@@ -18,7 +18,7 @@ class ProcessingSequenceBarrier : public SequenceBarrier {
 public:
 
 	ProcessingSequenceBarrier(WaitStrategy* wait_strategy, Sequence* cursor_sequence, const std::vector<Sequence*>& dependent_sequences)
-	: cursor_sequence_(cursor_sequence), dependent_sequences_(dependent_sequences), alerted_(false) {
+	: wait_strategy_(wait_strategy), cursor_sequence_(cursor_sequence), dependent_sequences_(dependent_sequences), alerted_(false) {
 
 	}
 

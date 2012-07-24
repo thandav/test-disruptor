@@ -22,6 +22,10 @@ public:
 		return value_;
 	}
 
+	long get() const {
+		return value_;
+	}
+
 	void set(long value) {
 		this->value_ = value;
 	}

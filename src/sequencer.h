@@ -99,8 +99,9 @@ public:
 	}
 
 	long remainingCapacity() {
-		//TODO
-		return 0;
+		long consumed = getMinimumSequence(gating_sequences_);
+		long produced = cursor_->get();
+		return bufferSize() - (produced - consumed);
 	}
 
 	static const long INITIAL_CURSOR_VALUE = -1L;
@@ -110,6 +111,15 @@ protected:
 	void publish(long sequence, int batch_size) {
 		cursor_->set(sequence);
 		wait_strategy_->signalAllWhenBlocking();
+	}
+
+	long getMinimumSequence(const std::vector<Sequence*>& sequences) {
+		long minimum = LONG_MAX;
+		for (int i = 0; i < sequences.size(); i++) {
+			long sequence = sequences[i]->get();
+			minimum = minimum < sequence ? minimum : sequence;
+		}
+		return minimum;
 	}
 
 	Sequence* cursor_;
